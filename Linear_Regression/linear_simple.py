@@ -6,17 +6,6 @@ import numpy as np
 import torch.optim as optim
 import random
 
-class LinearNet(nn.Module):
-    def __init__(self, n_feature):
-        super(LinearNet, self).__init__()
-        self.linear = nn.Linear(n_feature, 1)
-
-    #formard 定义前向传播
-    def forward(self, x):
-        y = self.linear(x)
-        return y
-
-
 # 生成数据集
 num_inputs = 2
 num_examples = 1000
@@ -54,9 +43,9 @@ optimizer = optim.SGD(net.parameters(), lr = 0.03)
 
 num_epoches = 3
 for epoch in range(1, num_epoches + 1):
-    for X,y in data_iter:
+    for X, y in data_iter:
         output = net(X)
-        l = loss(output, y.view(-1,1))
+        l = loss(output, y.view(output.size()))
         optimizer.zero_grad()
         l.backward()
         optimizer.step()
