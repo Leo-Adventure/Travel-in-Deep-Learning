@@ -28,7 +28,8 @@ class Residual(nn.Module):
 
         return F.relu(Y+input)
 
-net = nn.Sequential(
+
+resnet = nn.Sequential(
     nn.Conv2d(1, 64, kernel_size=7, padding=3, stride=2),
     nn.BatchNorm2d(64),
     nn.ReLU(),
@@ -46,16 +47,16 @@ def resnet_block(in_channels, out_channels, num_residuals, first_blk=False):
             blk.append(Residual(out_channels, out_channels))
     return nn.Sequential(*blk)
 
-net.add_module("resnet_block1", resnet_block(64, 64, 2, first_blk=True))
-net.add_module("resnet_block2", resnet_block(64, 128, 2))
-net.add_module("resnet_block3", resnet_block(128, 256, 2))
-net.add_module("resnet_block4", resnet_block(256, 512, 2))
-net.add_module("global_avg_pool", d2l.GlobalAvgPool2d()) # GlobalAvgPool2d的输出: (Batch, 512, 1, 1)
-net.add_module("fc", nn.Sequential(d2l.FlattenLayer(), nn.Linear(512, 10)))
+resnet.add_module("resnet_block1", resnet_block(64, 64, 2, first_blk=True))
+resnet.add_module("resnet_block2", resnet_block(64, 128, 2))
+resnet.add_module("resnet_block3", resnet_block(128, 256, 2))
+resnet.add_module("resnet_block4", resnet_block(256, 512, 2))
+resnet.add_module("global_avg_pool", d2l.GlobalAvgPool2d()) # GlobalAvgPool2d的输出: (Batch, 512, 1, 1)
+resnet.add_module("fc", nn.Sequential(d2l.FlattenLayer(), nn.Linear(512, 10)))
 
 
 X = torch.rand((1, 1, 224, 224))
-for name, layer in net.named_children():
+for name, layer in resnet.named_children():
     X = layer(X)
     print(name, ' output shape:\t', X.shape)
 
