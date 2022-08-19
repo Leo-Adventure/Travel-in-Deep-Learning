@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 import sys
-sys.path.append("..")
+sys.path.append("")
 import d2lzh_pytorch as d2l
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
